@@ -1,0 +1,64 @@
+# Alacritty Configuration
+
+# Set fish as the shell
+shell:
+  program: /usr/bin/fish
+
+# Run fastfetch on shell startup — configured in fish, not here
+# (see section below)
+
+# Font configuration
+font:
+  normal:
+    family: "Cascadia Code Nerd Font"
+    style: Regular
+  bold:
+    style: Bold
+  italic:
+    style: Italic
+  size: 11.0
+
+# Window appearance
+window:
+  opacity: 0.95
+  padding:
+    x: 10
+    y: 10
+  decorations: full
+  startup_mode: Windowed
+
+# Cursor
+cursor:
+  style: Beam
+  unfocused_hollow: true
+
+# Scrolling
+scrolling:
+  history: 10000
+  multiplier: 3
+
+# Colors: Arc-Dark theme
+colors:
+  primary:
+    background: '0x2f343f'
+    foreground: '0xd3dae3'
+
+  normal:
+    black:   '0x2f343f'
+    red:     '0xbf616a'
+    green:   '0xa3be8c'
+    yellow:  '0xebcb8b'
+    blue:    '0x8fa1b3'
+    magenta: '0xb48ead'
+    cyan:    '0x96b5b4'
+    white:   '0xd3dae3'
+
+  bright:
+    black:   '0x4c566a'
+    red:     '0xbf616a'
+    green:   '0xa3be8c'
+    yellow:  '0xebcb8b'
+    blue:    '0x8fa1b3'
+    magenta: '0xb48ead'
+    cyan:    '0x96b5b4'
+    white:   '0xffffff'

@@ -1,0 +1,6 @@
+echo 'pcm.!default {
+    type pipewire
+}
+ctl.!default {
+    type pipewire
+}' > ~/.asoundrc

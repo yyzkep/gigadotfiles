@@ -1,0 +1,51 @@
+general {
+    colors = true
+    interval = 5
+}
+
+order += "disk /"
+order += "cpu_usage"
+order += "cpu_temperature 0"
+order += "load"
+order += "memory"
+order += "volume master"
+order += "ethernet enp0s26u1u1"
+order += "time"
+
+
+volume master {
+	format = "󰋎 %volume"
+	format_muted = "󰋐 "
+	device = "pulse:alsa_output.usb-C-Media_Electronics_Inc._GHP-011-00.analog-stereo"
+}
+
+disk "/" {
+    format = ": %avail"
+}
+
+ethernet enp0s26u1u1 {
+	 format_up = "󰈀"
+        format_down = "󰈂"
+}
+
+cpu_usage {
+    format = ": %usage"
+}
+
+cpu_temperature 0 {
+    format = " %degrees 󰔄"
+    path = "/sys/class/hwmon/hwmon2/temp1_input"
+}
+
+
+load {
+    format = ": %1min"
+}
+
+memory {
+    format = ": %used"
+}
+
+time {
+    format = "%Y-%m-%d %H:%M:%S"
+}

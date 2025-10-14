@@ -1,0 +1,58 @@
+[colors.bright]
+black   = "0x928374"   # Gruvbox dark grayish brown
+blue    = "0x8ec07c"   # Gruvbox soft green (used in focus)
+cyan    = "0x689d6a"   # Gruvbox muted cyan
+green   = "0x8ec07c"   # Gruvbox soft green (used in focus)
+magenta = "0xd79921"   # Gruvbox dark yellow (instead of magenta)
+red     = "0xfb4934"   # Gruvbox bright red
+white   = "0xebdbb2"   # Gruvbox light beige/cream
+yellow  = "0xb8bb26"   # Gruvbox yellow
+
+[colors.normal]
+black   = "0x1d2021"   # Dark background (almost black)
+blue    = "0x458588"   # Darker blue (blueish-gray tone)
+cyan    = "0x689d6a"   # Gruvbox muted cyan
+green   = "0x8ec07c"   # Gruvbox soft green
+magenta = "0xd79921"   # Gruvbox yellow (substituted for magenta)
+red     = "0xfb4934"   # Gruvbox bright red
+white   = "0xebdbb2"   # Gruvbox light beige/cream
+yellow  = "0xb8bb26"   # Gruvbox yellow
+
+[colors.primary]
+background = "0x1d2021"   # Gruvbox dark background
+foreground = "0xebdbb2"   # Gruvbox light cream text
+
+[cursor]
+style = "Beam"
+unfocused_hollow = true
+
+[font]
+size = 10.0
+
+[font.bold]
+style = "Bold"
+
+[font.italic]
+style = "Italic"
+
+[font.normal]
+family = "FiraCode Nerd Font"
+style = "Regular"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[terminal.shell]
+program = "/usr/bin/fish"
+
+[window]
+decorations = "full"
+opacity = 1.0
+startup_mode = "Windowed"
+
+[window.padding]
+x = 10
+y = 10
+
+[terminal]
