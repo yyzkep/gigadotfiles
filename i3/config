@@ -17,6 +17,12 @@ exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id firefox; workspace 2; exec --no-startup-id discord; workspace 3; exec --no-startup-id spotify
 exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/i3/gruvbox-lock.sh
 exec --no-startup-id nm-applet
+# Load GTK/LXAppearance theme settings
+exec_always --no-startup-id bash -c 'export GTK_THEME="Gruvbox-Material-Dark"; export GTK_ICON_THEME="Gruvbox-Plus-Dark"; export XCURSOR_THEME="Bibata-Original-Classic"; export XCURSOR_SIZE=24'
+exec_always --no-startup-id bash -c 'source ~/.profile 2>/dev/null || true'
+exec --no-startup-id xsettingsd &
+
+
 # Audio Controls using pactl (PulseAudio)
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status

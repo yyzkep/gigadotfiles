@@ -1,200 +1,76 @@
--- ======== Plugin Manager Initialization ========
-vim.cmd([[
-call plug#begin('~/.local/share/nvim/plugged')
-
-" LSP and Completion
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'saadparwaiz1/cmp_luasnip'
-Plug 'L3MON4D3/LuaSnip'
-
-" File Explorer
-Plug 'kyazdani42/nvim-tree.lua'
-
-" Colorscheme
-Plug 'ellisonleao/gruvbox.nvim'
-
-" Syntax Highlighting
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
-" Formatting
-Plug 'sbdchd/neoformat'
-
-call plug#end()
-]])
-
--- ======== Basic Settings ========
-vim.o.syntax = 'enable'
-vim.cmd('filetype plugin indent on')
-vim.wo.number = true            -- Show line numbers
-vim.wo.relativenumber = true    -- Show relative line numbers
-vim.o.tabstop = 4               -- Number of spaces tabs count for
-vim.o.shiftwidth = 4            -- Number of spaces to use for autoindent
-vim.o.expandtab = true          -- Convert tabs to spaces
-vim.o.clipboard = 'unnamedplus' -- Use system clipboard
-vim.o.background = 'dark'
-
--- ======== Colorscheme ========
-vim.cmd('colorscheme gruvbox')
-
--- ======== nvim-tree Configuration ========
-require'nvim-tree'.setup {
-  auto_reload_on_write = true,
-  disable_netrw = true,
-  hijack_netrw = true,
-  update_cwd = true,
-  diagnostics = {
-    enable = true,
-    icons = {
-      hint = "",
-      info = "",
-      warning = "",
-      error = "",
-    }
-  },
-  view = {
-    width = 30,
-    side = 'left',
-  },
-  git = {
-    enable = true,
-    ignore = false,
-  },
-  renderer = {
-    indent_markers = {
-      enable = true,
-      icons = {
-        corner = "└ ",
-        edge = "│ ",
-        item = "│ ",
-        none = "  ",
-      },
-    },
-    icons = {
-      glyphs = {
-        default = "",
-        symlink = "",
-        folder = {
-          arrow_open = "",
-          arrow_closed = "",
-          default = "",
-          open = "",
-          empty = "",
-          empty_open = "",
-          symlink = "",
-          symlink_open = "",
-        },
-        git = {
-          unstaged = "✗",
-          staged = "✓",
-          unmerged = "",
-          renamed = "➜",
-          untracked = "★",
-          deleted = "",
-          ignored = "◌",
-        },
-      },
-    },
-  },
-}
-
--- Map leader key and nvim-tree toggle
-vim.g.mapleader = ','
-vim.api.nvim_set_keymap('n', '<leader>e', ':NvimTreeToggle<CR>', { noremap=true, silent=true })
-
--- ======== LSP Setup ========
-local lspconfig = require('lspconfig')
-local cmp_lsp = require('cmp_nvim_lsp')
-
-local on_attach = function(client, bufnr)
-  -- Custom on_attach code, e.g. keymaps, can go here
+-- ~/.config/nvim/init.lua
+-- Bootstrap lazy.nvim if not installed
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
-local capabilities = cmp_lsp.default_capabilities()
 
-lspconfig.pyright.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
+require("lazy").setup({
+  -- LSP and Tools
+  { "hrsh7th/cmp-cmdline" },
+  { "hrsh7th/cmp-path" },
+  { "nvim-tree/nvim-web-devicons" },
+  { "nvim-tree/nvim-tree.lua", dependencies = { "nvim-tree/nvim-web-devicons" } },
+  { "nvim-lualine/lualine.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
+  { "ellisonleao/gruvbox.nvim", priority = 1000, config = true },
+  { "williamboman/mason.nvim", config = true },
+  { "williamboman/mason-lspconfig.nvim", config = true },
+  { "neovim/nvim-lspconfig" },
+  { "hrsh7th/nvim-cmp" },
+  { "hrsh7th/cmp-nvim-lsp" },
+  { "L3MON4D3/LuaSnip" },
+  { "saadparwaiz1/cmp_luasnip" },
+  { "mfussenegger/nvim-dap"},
+  { "onsails/lspkind.nvim" },
+  { "windwp/nvim-autopairs", config = true }
+})
 
--- ======== nvim-cmp Setup ========
-local cmp = require'cmp'
-local luasnip = require'luasnip'
+
+require("lsp.setup")
+
+vim.o.background = "dark"  -- or "light" for light mode
+vim.cmd([[colorscheme gruvbox]])
+
+local cmp = require("cmp")
 
 cmp.setup({
   snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body) -- For LuaSnip users.
-    end,
+    expand = function(args) require("luasnip").lsp_expand(args.body) end,
   },
-  mapping = {
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, {'i','s'}),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, {'i','s'}),
-  },
+  mapping = cmp.mapping.preset.insert({
+    ["<C-Space>"] = cmp.mapping.complete(),
+    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+  }),
   sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  }, {
-    { name = 'buffer' },
-  })
+    { name = "nvim_lsp" },
+    { name = "luasnip" },
+  }),
 })
 
--- Use buffer source for '/' and '?' in commandline mode
-cmp.setup.cmdline({ '/', '?' }, {
+-- Enable completion in command mode (:)
+cmp.setup.cmdline(":", {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = "path" },
+    { name = "cmdline" },
+  }),
+})
+
+-- Enable completion for search (/)
+cmp.setup.cmdline("/", {
   mapping = cmp.mapping.preset.cmdline(),
   sources = {
-    { name = 'buffer' }
-  }
-})
-
--- Use cmdline & path source for ':' commands
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-    { name = 'cmdline' }
-  })
-})
-
--- ======== Treesitter Configuration ========
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "lua", "python", "javascript", "typescript", "html", "css" },
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
+    { name = "buffer" },
   },
-}
+})
 
--- ======== Neoformat Configuration ========
-vim.cmd([[
-  autocmd BufWritePre * undojoin | Neoformat
-]])
+vim.keymap.set("n", "<leader>e", ":!lf<CR>", { desc = "Open lf file manager" })
 
--- ======== Additional Keybindings ========
-vim.api.nvim_set_keymap('n', '<leader>f', ':Neoformat<CR>', { noremap=true, silent=true })
